@@ -1,7 +1,7 @@
 #include "coreutils.h"
 #include <stdio.h>
 
-int help()
+int help(char ** argv)
 {
     puts("xsh - a lightweight shell");
     puts("written by cakeman105");
@@ -10,9 +10,16 @@ int help()
     return 0;
 }
 
-int see(char * str)
+int see(char ** argv)
 {
-    if (str)
-        puts(str);
+    int i = 1;
+    while (argv[i])
+        puts(argv[i++]);
+
+    return 0;
+}
+
+int bye()
+{
     return 0;
 }

@@ -7,19 +7,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <strings.h>
 #include <string.h>
-#include <sys/unistd.h>
+#include <unistd.h>
 #include "utils/coreutils.h"
 
 #define BUFFER_SIZE 32
 #define LINE_DELIMS " \t\r\n\a"
+#define COMMAND_COUNT 2
 
 /**
  * gets string from stdin and ends once a newline char is encountered
  * @param file input
  * @return line
 */
-char * getLine(FILE * file)
+char * get_line(FILE * file)
 {
     char c = fgetc(file);
     char * line = calloc(1, sizeof(char));
@@ -54,6 +56,22 @@ char ** tokenize(char * line)
     return params;
 }
 
+int run(char ** argv)
+{
+    const char * cmds[COMMAND_COUNT] = {"help", "see"};
+    int (*funcs[]) (char **) = {&help, &see};
+
+    for (int i = 0; i < COMMAND_COUNT; i++)
+    {
+        if (!strcasecmp(cmds[i], argv[0]))
+        {
+            return funcs[i](argv);
+        }
+    }
+
+    return -1;
+}
+
 int main(int argc, char ** argv)
 {
     puts("xsh - a lightweight shell");
@@ -64,17 +82,11 @@ int main(int argc, char ** argv)
     while (1)
     {
         printf("xsh ~~~> ");
-        line = getLine(stdin);
-        if (!strcasecmp(line, "exit"))
-            break;
-        
+        line = get_line(stdin);
         params = tokenize(line);
 
-        if (!strcasecmp(params[0], "see"))
-            see(params[1]);
-
-        if (!strcasecmp(params[0], "help"))
-            help();
+        if (run(params) == -1)
+            puts("Invalid command!");
 
         free(line);
         free(params);
