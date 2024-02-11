@@ -1,0 +1,4 @@
+int help();
+
+int see();
+
