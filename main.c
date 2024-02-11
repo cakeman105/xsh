@@ -14,7 +14,7 @@
 
 #define BUFFER_SIZE 32
 #define LINE_DELIMS " \t\r\n\a"
-#define COMMAND_COUNT 2
+#define COMMAND_COUNT 3
 
 /**
  * gets string from stdin and ends once a newline char is encountered
@@ -58,8 +58,8 @@ char ** tokenize(char * line)
 
 int run(char ** argv)
 {
-    const char * cmds[COMMAND_COUNT] = {"help", "see"};
-    int (*funcs[]) (char **) = {&help, &see};
+    const char * cmds[COMMAND_COUNT] = {"help", "see", "bye"};
+    int (*funcs[]) (char **) = {&help, &see, &bye};
 
     for (int i = 0; i < COMMAND_COUNT; i++)
     {
@@ -85,13 +85,19 @@ int main(int argc, char ** argv)
         line = get_line(stdin);
         params = tokenize(line);
 
-        if (run(params) == -1)
+        int status = run(params);
+        if (status == -1)
             puts("Invalid command!");
+        else if (status == -2)
+            break;
+
+        printf("[%d] ", status);
 
         free(line);
         free(params);
     }
-
+    
+    free(params);
     free(line);
     puts("Goodbye!");
     return 0;

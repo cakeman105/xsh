@@ -21,5 +21,5 @@ int see(char ** argv)
 
 int bye()
 {
-    return 0;
+    return -2;
 }

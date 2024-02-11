@@ -1,6 +1,6 @@
-int help();
+int help(char ** argv);
 
-int see();
+int see(char ** argv);
 
 int bye();
 
