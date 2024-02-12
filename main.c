@@ -14,7 +14,7 @@
 
 #define BUFFER_SIZE 32
 #define LINE_DELIMS " \t\r\n\a"
-#define COMMAND_COUNT 3
+#define COMMAND_COUNT 4
 
 /**
  * gets string from stdin and ends once a newline char is encountered
@@ -36,15 +36,16 @@ char * get_line(FILE * file)
     }
 
     line[i] = '\0';
+
     return line;
 }
 
-char ** tokenize(char * line)
+char ** tokenize(char * line, int * argc)
 {
     char ** params = calloc(1, sizeof(char *));
-
     char * token = strtok(line, LINE_DELIMS);
     params[0] = token;
+
     int i = 1;
     while ((token = strtok(NULL, LINE_DELIMS)))
     {
@@ -53,19 +54,21 @@ char ** tokenize(char * line)
         i++;
     }
 
+    *argc = i;
+
     return params;
 }
 
-int run(char ** argv)
+int run(int argc, char ** argv)
 {
-    const char * cmds[COMMAND_COUNT] = {"help", "see", "bye"};
-    int (*funcs[]) (char **) = {&help, &see, &bye};
+    const char * cmds[COMMAND_COUNT] = {"help", "see", "bye", "cloc"};
+    int (*funcs[]) (int, char **) = {&help, &see, &bye, &cloc};
 
     for (int i = 0; i < COMMAND_COUNT; i++)
     {
         if (!strcasecmp(cmds[i], argv[0]))
         {
-            return funcs[i](argv);
+            return funcs[i](argc, argv);
         }
     }
 
@@ -83,11 +86,12 @@ int main(int argc, char ** argv)
     {
         printf("xsh ~~~> ");
         line = get_line(stdin);
-        params = tokenize(line);
+        int argc = 0;
+        params = tokenize(line, &argc);
 
-        int status = run(params);
+        int status = run(argc, params);
         if (status == -1)
-            puts("Invalid command!");
+            fprintf(stderr, "Invalid argument!\n");
         else if (status == -2)
             break;
 
@@ -99,6 +103,6 @@ int main(int argc, char ** argv)
     
     free(params);
     free(line);
-    puts("Goodbye!");
-    return 0;
+    puts("args free()'d successfully. Goodbye!");
+    return EXIT_SUCCESS;
 }
