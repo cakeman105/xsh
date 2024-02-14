@@ -5,3 +5,5 @@ int see(int argc, char ** argv);
 int bye();
 
 int cloc();
+
+int cat();

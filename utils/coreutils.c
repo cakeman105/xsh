@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include "../func/func.h"
 
 int help(int argc, char ** argv)
 {
@@ -29,6 +30,26 @@ int cloc()
 {
     time_t t = time(NULL);
     printf("%s", (asctime(localtime(&t))));
+
+    return 0;
+}
+
+int cat(int argc, char ** argv)
+{
+    FILE * file;
+    char * line;
+    int warningptr = 0;
+    if (!(file = fopen(argv[1], "r")))
+        return -1;
+
+    while ((line = get_line(file, &warningptr)))
+    {
+        puts(line);
+        if (warningptr)
+            break;
+    }
+    
+    fclose(file);
 
     return 0;
 }
