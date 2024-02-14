@@ -40,7 +40,10 @@ int cat(int argc, char ** argv)
     char * line;
     int warningptr = 0;
     if (!(file = fopen(argv[1], "r")))
-        return -1;
+    {
+        perror("cat");
+        return 255;
+    }
 
     while ((line = get_line(file, &warningptr)))
     {

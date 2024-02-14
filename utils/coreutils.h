@@ -6,4 +6,4 @@ int bye();
 
 int cloc();
 
-int cat();
+int cat(int argc, char ** argv);

@@ -38,6 +38,7 @@ int main(int argc, char ** argv)
     
     free(params);
     free(line);
-    puts("args free()'d successfully. Goodbye!");
+    perror("free()");
+    puts("Goodbye!");
     return EXIT_SUCCESS;
 }

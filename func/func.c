@@ -9,11 +9,6 @@
 #define LINE_DELIMS " \t\r\n\a"
 #define COMMAND_COUNT 5
 
-/**
- * gets string from stdin and ends once a newline char is encountered
- * @param file input
- * @return line
-*/
 char * get_line(FILE * file, int * warningptr)
 {
 
@@ -61,6 +56,7 @@ char ** tokenize(char * line, int * argc)
 
 int run(int argc, char ** argv)
 {
+    //DO NOT CHANGE THE ORDER OF THE FOLLOWING ARRS
     const char * cmds[COMMAND_COUNT] = {"help", "see", "bye", "cloc", "cat"};
     int (*funcs[]) (int, char **) = {&help, &see, &bye, &cloc, &cat};
 
@@ -72,5 +68,5 @@ int run(int argc, char ** argv)
         }
     }
 
-    return -1;
+    return -1; //return -1 only for non-existing programs
 }
